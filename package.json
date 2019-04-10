@@ -1,0 +1,17 @@
+{
+  "name": "3d-body-measurement",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "request": "^2.88.0",
+    "require": "^2.4.20",
+    "requirejs": "^2.3.6",
+    "three-js": "^79.0.0"
+  }
+}

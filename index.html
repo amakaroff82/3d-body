@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<title>three.js webgl - loaders - OBJ loader</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+		<style>
+			body {
+				font-family: Monospace;
+				background-color: #000;
+				color: #fff;
+				margin: 0px;
+				overflow: hidden;
+			}
+			#info {
+				color: #fff;
+				position: absolute;
+				top: 10px;
+				width: 100%;
+				text-align: center;
+				z-index: 100;
+				display:block;
+			}
+			#info a, .button { color: #f00; font-weight: bold; text-decoration: underline; cursor: pointer }
+
+			.log {
+				color: white;
+				font-size: 14px;
+				position: fixed;
+				bottom: 2px;
+				left: 2px;
+				opacity: 0.3;
+				border-bottom: 1px solid white;
+				transition: opacity 0.2s ease;
+			}
+			.log:hover {
+				opacity: 0.8;
+			}
+			.name {
+				display: inline-block;
+				width: 300px;
+				border-right: 1px solid white;
+				text-transform: lowercase;
+			}
+			.orig {
+				display: inline-block;
+				width: 80px;
+				border-right: 1px solid white;
+				text-align: center;
+			}
+			.res {
+				display: inline-block;
+				width: 80px;
+				border-right: 1px solid white;
+				text-align: center;
+			}
+			.rec {
+				border-left: 1px solid white;
+				border-top: 1px solid white;
+			}
+			.header {
+				color: chartreuse;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="log">
+
+		</div>
+
+		<script src="src/libs/three.min.js"></script>
+		<script src="src/libs/OBJLoader.js"></script>
+
+		<script src="src/metrix/shared/neckGirthAndCervicalHeight.js"></script>
+		<script src="src/metrix/shared/verticalBodySlice.js"></script>
+		<script src="src/metrix/shared/hipGirthAndHeight.js"></script>
+		<script src="src/metrix/shared/chest.js"></script>
+
+		<script src="src/metrix/measurements.js"></script>
+
+		<script src="src/ui/OrbitControls.js"></script>
+
+		<script src="src/scanner/helpers.js"></script>
+		<script src="src/scanner/slicing.js"></script>
+		<script src="src/tests/models.js"></script>
+		<script src="src/ui/ui.js"></script>
+		<script src="src/ui/index.js"></script>
+
+	</body>
+</html>
+
