@@ -40,8 +40,10 @@
         }
 
         var hipCenterX = ((maxSlice.sliceInfo.maxX - maxSlice.sliceInfo.minX) / 2) + maxSlice.sliceInfo.minX;
+        var hipCenterZ = ((maxSlice.sliceInfo.maxZ - maxSlice.sliceInfo.minZ) / 2) + maxSlice.sliceInfo.minZ;
 
 
+        exports.hipCenterZ = hipCenterZ;
         exports.hipCenterX = hipCenterX;
         exports.hipGirth = maxSlice.sliceInfo.len;
         exports.heightToHip = maxSlice.sliceInfo.maxY;

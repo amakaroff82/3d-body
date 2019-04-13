@@ -1,5 +1,25 @@
 (function(exports){
 
+    function getUnderbustGirst(){
+        return chestData.underbustGirst;
+    }
+
+    function getTotalCrotchLength() {
+        return verticalBodySlice.totalCrotchLength;
+    }
+
+    function getCrotchLengthFrontLength() {
+        return verticalBodySlice.crotchLengthFrontLength;
+    }
+
+    function getBackWaistLength(){
+        return verticalBodySlice.backWaistLength;
+    }
+
+    function getFrontWaistLineLength() {
+        return chestData.frontWaistLineLength;
+    }
+
     function getBustHeight(){
         return chestData.bustHeight;
     }
@@ -164,7 +184,8 @@
         {
             Name: "UNDERBUST GIRTH",
             Ru: "обхват под грудью",
-            Complexity: ""
+            Complexity: "",
+            code: getUnderbustGirst
         },
         {
             Name: "NECK GIRTH",
@@ -197,12 +218,16 @@
         {
             Name: "BACK WAIST LENGTH",
             Ru: "длинна от шеи до пояса сзади",
-            Complexity: "*"
+            Complexity: "*",
+            code: getBackWaistLength,
+            showSlice: true
         },
         {
             Name: "FRONT WAIST LENGTH",
             Ru: "длинна от шеи до пояса спереди",
-            Complexity: "*"
+            Complexity: "*",
+            code: getFrontWaistLineLength,
+            showSlice: true
         },
         {
             Name: "NECK SHOULDER POINT TO BUST POINT",
@@ -253,12 +278,15 @@
         {
             Name: "TOTAL CROTCH LENGTH",
             Ru: "общая длинна промежности (до пояса)",
-            Complexity: "???"
+            Complexity: "???",
+            code: getTotalCrotchLength,
         },
         {
             Name: "CROTCH LENGTH FRONT",
             Ru: "длинна промежнасти спереди (до пояса)",
-            Complexity: "???"
+            Complexity: "???",
+            code: getCrotchLengthFrontLength,
+            showSlice: true
         },
         {
             Name: "MIDDLE HIP GIRTH",
@@ -341,8 +369,8 @@
         // shared
         neckGirthAndCervicalHeightData.getNeckGirthAndCervicalHeightData(sharedConfig);
         hipGirthAndHeight.getHipGirthAndHeight(sharedConfig);
-        verticalBodySlice.getVerticalBodySlice(sharedConfig);
         chestData.getChestData(sharedConfig);
+        verticalBodySlice.getVerticalBodySlice(sharedConfig);
 
         for(var c in config){
             var conf = config[c];

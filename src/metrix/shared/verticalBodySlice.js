@@ -16,7 +16,7 @@
         var matrix = matrixRot.multiply(matrixTrans);
 
         // slicing
-        var resultSlices = slicing.getSlices(matrix, 1, 0, context.showSlices, true);
+        var verticalBodySlice = slicing.getSlices(matrix, 1, 0, context.showSlices, true)[0][0];
 
     /*    // looking to slice with min length
         var minLen = Infinity;
@@ -32,7 +32,6 @@
                 index = i;
             }
         }*/
-
     /*    // moving down from min length slice to detection level
         for(var i = index; i >= 0; i--){
             var slice = resultSlices[i][0];
@@ -54,33 +53,70 @@
             }
         }*/
 
-
-        var minSlice = resultSlices[0][0];
-
         var heightToNeck = neckGirthAndCervicalHeightData.heightToNeck;
         var heightToHip = hipGirthAndHeight.heightToHip;
+        var waistHeight = chestData.waistHeight;
 
-        var faces = [];
-        var len = 0;
+        var backSideFaces = [];
+        var backSideLength = 0;
 
-        var minSliceY = minSlice.sliceInfo.minY;
+        var crotchLengthFrontFaces = [];
+        var crotchLengthFrontLength = 0;
 
-        minSlice.faces.forEach(function(face){
+        var totalCrotchLengthFaces = [];
+        var totalCrotchLength = 0;
+
+        var backWaistLengthFaces = [];
+        var backWaistLength = 0;
+
+        var minSliceY = verticalBodySlice.sliceInfo.minY;
+
+        verticalBodySlice.faces.forEach(function(face){
             var fc = face.main;
             if(fc.a.z < 0 && fc.a.y < heightToNeck && fc.a.y > heightToHip){
-                faces.push(face);
-                len += face.len;
+                backSideFaces.push(face);
+                backSideLength += face.len;
             }
+
+            if(fc.a.y < waistHeight && fc.a.z > hipGirthAndHeight.hipCenterZ){
+                crotchLengthFrontFaces.push(face);
+                crotchLengthFrontLength += face.len;
+            }
+
+
+            if(fc.a.y < waistHeight && fc.a.z > hipGirthAndHeight.hipCenterZ){
+                totalCrotchLengthFaces.push(face);
+                totalCrotchLength += face.len;
+            }
+
+            if(fc.a.y < heightToNeck && fc.a.z <= hipGirthAndHeight.hipCenterZ){
+                totalCrotchLengthFaces.push(face);
+                totalCrotchLength += face.len;
+            }
+
+            if(fc.a.y < heightToNeck && fc.a.y > chestData.waistGirth && fc.a.z <= hipGirthAndHeight.hipCenterZ){
+                backWaistLengthFaces.push(face);
+                backWaistLength += face.len;
+            }
+
         });
 
-        minSlice.faces = faces;
+        //verticalBodySlice.faces = faces;
 
         if(true /*context.showSlices*/) {
-            showSlice(minSlice, false, "red");
+            showSlice(crotchLengthFrontFaces, false, "#aa33aa");
+            showSlice(backSideFaces, false, "#33aaaa");
+            showSlice(totalCrotchLengthFaces, false, "#aaaa33");
+            showSlice(backWaistLengthFaces, false, "#33aa33");
         }
 
-        exports.heightToCrotch = minSlice.minY;
-        exports.backSideLength = len;
+
+        exports.backWaistLength = backWaistLength;
+        exports.crotchLengthFrontLength = crotchLengthFrontLength;
+        exports.totalCrotchLength = totalCrotchLength;
+
+        exports.heightToCrotch = verticalBodySlice.minY;
+        exports.backSideLength = backSideLength;
         exports.trunckLength = heightToNeck - minSliceY;
     }
 

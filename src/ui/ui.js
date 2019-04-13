@@ -1,13 +1,14 @@
 var isTranslate = false;
 var paramStorage = null;
-var modelStorage = models.models[ 0 ];
+var modelStorage = models.models[ 5 ];
 
 
 
 
 
-function basis(group){
-    var origin = new THREE.Vector3( 0, 0, 0 );
+function basis(group, origin){
+    origin = origin || new THREE.Vector3( 0, 0, 0 );
+
     var length = 0.2;
 
     var dirX = new THREE.Vector3( 1, 0, 0 );
@@ -40,8 +41,8 @@ function basis(group){
 }
 
 
-function  showSlice(slice, showComputed, color) {
-    var faces = slice.faces;
+function showSlice(slice, showComputed, color) {
+    var faces = slice.faces || slice;
     for (var j = 1; j < faces.length; j=j+2) {
 
         var f = showComputed ? faces[j] : faces[j].main;

@@ -7,9 +7,9 @@ global.THREE = require("./libs/three.min.js");
 require("./libs/OBJLoader.js");
 
 global.neckGirthAndCervicalHeightData = require("./metrix/shared/neckGirthAndCervicalHeight.js");
-global.verticalBodySlice = require("./metrix/shared/verticalBodySlice");
 global.hipGirthAndHeight = require("./metrix/shared/hipGirthAndHeight");
 global.chestData = require("./metrix/shared/chest");
+global.verticalBodySlice = require("./metrix/shared/verticalBodySlice");
 global.measurements = require("./metrix/measurements.js");
 global.helpers = require("./scanner/helpers.js");
 global.slicing = require("./scanner/slicing.js");

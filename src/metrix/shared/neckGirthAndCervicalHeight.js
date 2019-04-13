@@ -22,7 +22,7 @@
         var matrix = matrixTrans.multiply(matrixRot);
 
         // slicing
-        var resultSlices = slicing.getSlices(matrix, countOfSlices, depth, true || context.showSlices, true);
+        var resultSlices = slicing.getSlices(matrix, countOfSlices, depth, context.showSlices, true);
 
 
 
@@ -52,8 +52,8 @@
                 }
 
 
-                var neckRightPoint = minSlice.faces.sort(function(f1, f2){
-                    return f2.a.x - f1.a.x;
+                var neckRightPoint = slice.faces.sort(function(f1, f2){
+                    return f1.a.x - f2.a.x;
                 })[0];
 
                 exports.neckRightPoint = neckRightPoint;

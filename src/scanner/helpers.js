@@ -300,15 +300,19 @@
         }
     }
 
+    function buildNormals(faces){
+        for(var i = 0; i < faces.length; i++) {
+            var fc = faces[i].main;
+            var ab = getDirection(fc.a, fc.b);
+            var cb = getDirection(fc.c, fc.b);
+            faces[i].normal = norm(crossProduct(cb, ab));
+        }
+    }
+
     function splitBodyParts(slice){
         var center = new THREE.Vector3(0,0,0);
 
-        for(var i = 0; i < slice.faces.length; i++){
-            var fc = slice.faces[i];
-            var ab = getDirection(fc.a, fc.b);
-            var cb = getDirection(fc.c, fc.b);
-            fc.normal = norm(crossProduct(cb, ab));
-        }
+        buildNormals(slice.faces);
 
         // computing left side
         var leftSide = slice.faces.filter(function(face){
@@ -450,5 +454,6 @@
     exports.splitBodyParts = splitBodyParts;
     exports.getDirection = getDirection;
     exports.crossProduct = crossProduct;
+    exports.buildNormals = buildNormals;
 
 })(typeof exports === 'undefined'? this['helpers']={}: exports);
