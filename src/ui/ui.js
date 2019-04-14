@@ -1,6 +1,6 @@
 var isTranslate = false;
 var paramStorage = null;
-var modelStorage = models.models[ 5 ];
+var modelStorage = models.models[ 0 ];
 
 
 
@@ -142,7 +142,37 @@ function renderRecord(param, container, header){
         res.innerText = param.result ? prepareResult(param.result) : " - ";
     rec.appendChild(res);
 
+
+    var pred = document.createElement("span");
+    pred.className = "pred";
+
+    var res = parseFloat(prepareResult(param.result));
+    var orig = parseFloat(prepareOrig(param.Name));
+
+    var a = Math.max(res, orig);
+    var b = Math.min(res, orig);
+
+    var prediction = parseInt(100 - b / (a / 100));
+    pred.innerText = prediction.toString();
+
+
+    pred.style.color = isNaN(prediction) ? "black" : "lightgreen";
+    if(Math.abs(prediction) > 2){
+        pred.style.color = "yellow"
+    }
+    if(Math.abs(prediction) > 5){
+        pred.style.color = "orange"
+    }
+    if(Math.abs(prediction) > 10){
+        pred.style.color = "red"
+    }
+
+    rec.appendChild(pred);
+
+
+
     container.appendChild(rec);
+
 }
 
 function prepareOrig(name){
