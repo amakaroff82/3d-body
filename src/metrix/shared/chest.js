@@ -135,13 +135,13 @@
         //bustSlice
         var underBustWaistLineFaces = [];
         var frontWaistLineFaces = [];
-        var frontWaistLineLength = 0;
+        var neckShoulderPointToBustLength = 0;
 
         frontWaistLineSlice.faces.forEach(function(f){
             if( f.main.a.y > bustSlice.sliceInfo.maxY &&
                 f.main.a.z > nr.main.a.z){
                 frontWaistLineFaces.push(f);
-                frontWaistLineLength += f.len;
+                neckShoulderPointToBustLength += f.len;
             }
 
             if( f.main.a.y < bustSlice.sliceInfo.maxY &&
@@ -225,8 +225,7 @@
         }
 
         var waistGirth = waistSlice.sliceInfo.len;
-
-        frontWaistLineLength += (bustSlice.sliceInfo.maxY - waistSlice.sliceInfo.maxY);
+        var frontWaistLineLength = neckShoulderPointToBustLength + (bustSlice.sliceInfo.maxY - waistSlice.sliceInfo.maxY);
 
 
         // maxWaistGirth
@@ -295,12 +294,15 @@
             showSlice(leftLegSlice, false, "red")
         }
 
-        var outsideLegLength = leftLegSlice.sliceInfo.len + hipGirthAndHeight.heightToHip;
+        var waistToHip = leftLegSlice.sliceInfo.len;
+        var outsideLegLength = waistToHip + hipGirthAndHeight.heightToHip;
 
         exports.underbustGirst = underbustSlice.sliceInfo.len;
         exports.frontWaistLineLength = frontWaistLineLength;
+        exports.neckShoulderPointToBustLength = neckShoulderPointToBustLength;
         exports.waistHeight = waistHeight;
         exports.waistGirth = waistGirth;
+        exports.waistToHip = waistToHip
         exports.chestGirth = chestGirth;
         exports.bustHeight = bustHeight;
         exports.middleHipGirth = middleHipGirth;

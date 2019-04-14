@@ -16,6 +16,10 @@
         return verticalBodySlice.backWaistLength;
     }
 
+    function getNeckShoulderPointToBustLength(){
+        return chestData.neckShoulderPointToBustLength;
+    }
+
     function getFrontWaistLineLength() {
         return chestData.frontWaistLineLength;
     }
@@ -80,6 +84,10 @@
 
     function getTrunckLength(){
         return verticalBodySlice.trunckLength;
+    }
+
+    function getWaistToHip(){
+        return chestData.waistToHip
     }
 
     function getWaistGirth(){
@@ -232,7 +240,9 @@
         {
             Name: "NECK SHOULDER POINT TO BUST POINT",
             Ru: "длинна от шеи до груди спереди",
-            Complexity: "*"
+            Complexity: "*",
+            code: getNeckShoulderPointToBustLength,
+            showSlices: true
         },
         {
             Name: "BUST POINT DISTANCE",
@@ -273,7 +283,9 @@
         {
             Name: "WAIST TO HIP",
             Ru: "длина от талии до линни обхвата бедра",
-            Complexity: ""
+            Complexity: "",
+            code: getWaistToHip,
+            showSlices: true
         },
         {
             Name: "TOTAL CROTCH LENGTH",
