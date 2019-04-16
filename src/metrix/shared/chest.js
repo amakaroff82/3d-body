@@ -62,7 +62,7 @@
         var rightSide = parts[1];
 
         if(true/* context.showSlices*/) {
-            //showSlice(leftSide, false, "purple");
+            showSlice(leftSide, false, "orange");
             showSlice(rightSide, false, "orange");
         }
 
@@ -82,7 +82,7 @@
 
 
         rightSide.faces = rightSide.faces.filter(function(f){
-            return f.main.a.z > (leftSide.sliceInfo.maxZ / 2) && helpers.dot(f.normal, center) > 0.8;
+            return f.main.a.z > (rightSide.sliceInfo.maxZ / 2) && helpers.dot(f.normal, center) > 0.8;
         });
 
         rightSide.faces.sort(function(f1, f2){
@@ -196,12 +196,20 @@
         matrixTrans.makeTranslation(0, -underBustGirthHeight, 0);
 
         // slicing
-        var underbustSlice = slicing.getSlices(matrixTrans, 1, 0, true || context.showSlices, true)[0][0];
+        var underbustSlice = slicing.getSlices(matrixTrans, 1, 0, context.showSlices);
+        underbustSlice = underbustSlice[0][0];
+
+        var parts = helpers.splitBodyParts(underbustSlice);
+
+        var leftSide = parts[0];
+        var rightSide = parts[1];
 
 
         if(true || context.showSlices){
             showSlice(frontWaistLineFaces, false, "#bb6600");
             showSlice(underBustWaistLineFaces, false, "#00bb66");
+            showSlice(leftSide, false, "#66bbbb");
+            showSlice(rightSide, false, "#bbbb66");
         }
 
         var chestGirth = leftSide.sliceInfo.len + rightSide.sliceInfo.len;

@@ -153,10 +153,12 @@ function renderRecord(param, container, header){
     var b = Math.min(res, orig);
 
     var prediction = parseInt(100 - b / (a / 100));
-    pred.innerText = prediction.toString();
-
+    pred.innerText = prediction.toString() + "% / " + (a - b).toFixed(1).toString() + "sm";
 
     pred.style.color = isNaN(prediction) ? "black" : "lightgreen";
+
+    prediction = a - b;
+
     if(Math.abs(prediction) > 2){
         pred.style.color = "yellow"
     }

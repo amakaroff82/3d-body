@@ -316,28 +316,38 @@
 
         // computing left side
         var leftSide = slice.faces.filter(function(face){
-            return 0 < Math.min(face.a.x,face.b.x,face.c.x);
+            return 0 < Math.min(face.main.a.x,face.main.b.x,face.main.c.x);
         });
 
         var leftHand = leftSide.filter(function(face){
-            return dot(face.normal, norm(face.a)) < 0;
+
+            var pt = {
+                x: face.main.a.x,
+                y: 0,
+                z: face.main.a.z
+            };
+
+            var res = dot(face.normal, norm(pt));
+            //console.log("L: " + res);
+
+            return res < 0;
         });
 
         leftHand.sort(function(f1, f2){
-            return f1.a.x - f2.a.x;
+            return f1.main.a.x - f2.main.a.x;
         });
 
         var maxLeft = leftHand[0].a.x;
 
         var leftSideBody = leftSide.filter(function(face){
-            return face.a.x < maxLeft
+            return face.main.a.x < maxLeft
         });
 
         var forward = [];
         var back = [];
 
         leftSideBody.forEach(function(face){
-            if(face.a.z > 0){
+            if(face.main.a.z > 0){
                 forward.push(face)
             }else{
                 back.push(face)
@@ -345,11 +355,11 @@
         });
 
         var fPoint = forward.sort(function(f1, f2){
-            return f1.a.z - f2.a.z
+            return f1.main.a.z - f2.main.a.z
         });
 
         var bPoint = back.sort(function(f1, f2){
-            return f2.a.z - f1.a.z
+            return f2.main.a.z - f1.main.a.z
         });
 
         var dist = fPoint[0].a.distanceTo(bPoint[0].a);
@@ -366,34 +376,42 @@
 
 
         var rightSide = slice.faces.filter(function(face){
-            return 0 >= Math.min(face.a.x,face.b.x,face.c.x);
+            return 0 >= Math.min(face.main.a.x,face.main.b.x,face.main.c.x);
         });
 
         var rightHand = rightSide.filter(function(face){
+            var pt = {
+                x: face.main.a.x,
+                y: 0,
+                z: face.main.a.z
+            };
 
-            var res = dot(face.normal, norm(face.a));
+            var res = dot(face.normal, norm(pt));
+
+            //console.log("R: " + res);
+
             return res < 0;
         });
 
         rightHand.sort(function(f1, f2){
-            return f2.a.x - f1.a.x;
+            return f2.main.a.x - f1.main.a.x;
         });
 
         var maxRight = rightHand[0].a.x;
 
         var rightSideBody = rightSide.filter(function(face){
-            return face.a.x > maxRight
+            return face.main.a.x > maxRight
         });
 
         rightSideBody.sort(function(f1, f2){
-            return f2.a.x - f1.a.x;
+            return f2.main.a.x - f1.main.a.x;
         });
 
         forward = [];
         back = [];
 
         rightSideBody.forEach(function(face){
-            if(face.a.z > 0){
+            if(face.main.a.z > 0){
                 forward.push(face)
             }else{
                 back.push(face)
@@ -401,11 +419,11 @@
         });
 
         fPoint = forward.sort(function(f1, f2){
-            return f1.a.z - f2.a.z
+            return f1.main.a.z - f2.main.a.z
         });
 
         bPoint = back.sort(function(f1, f2){
-            return f2.a.z - f1.a.z
+            return f2.main.a.z - f1.main.a.z
         });
 
         dist = fPoint[0].a.distanceTo(bPoint[0].a);

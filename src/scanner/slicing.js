@@ -86,7 +86,7 @@
 
     }
 
-    function sliceTriangles(matrix, countOfSlices, depth){
+    function sliceTriangles(matrix, countOfSlices, depth, volume){
         //console.log("count of slices: " + countOfSlices);
 
         var slices = [];
@@ -118,21 +118,43 @@
                 var topOfTriangle = Math.max(f_t.a.y, f_t.b.y, f_t.c.y);
                 var bottomOfTriangle = Math.min(f_t.a.y, f_t.b.y, f_t.c.y);
 
-                if (topOfTriangle > 0 && 0 >= bottomOfTriangle) {
-                    var dist = helpers.calculateDistance(f_t, 0);
-
-                    f_t.len = dist.len;
-                    f_t.percent0 = dist.percent0;
-                    f_t.percent1 = dist.percent1;
-
-                    if(f_t.len != 0) {
+                if(volume){
+                    if (topOfTriangle > 0) {
                         var faces = slices[j];
                         faces.push(f_t);
-
                         break;
                     }
+
+                }else{
+                    if (topOfTriangle > 0 && 0 >= bottomOfTriangle) {
+                        var dist = helpers.calculateDistance(f_t, 0);
+
+                        f_t.len = dist.len;
+                        f_t.percent0 = dist.percent0;
+                        f_t.percent1 = dist.percent1;
+
+                        if(f_t.len != 0) {
+                            var faces = slices[j];
+                            faces.push(f_t);
+
+                            break;
+                        }
+                    }
+
                 }
             }
+        }
+
+        return slices;
+    }
+
+    function getVolume(matrix){
+        var slices = sliceTriangles(matrix, 1, 0, true);
+
+        for(var slice in slices){
+            var sl = slices[slice];
+
+            helpers.buildNormals(sl)
         }
 
         return slices;
@@ -225,6 +247,7 @@
     exports.getChain = getChain;
     exports.sliceTriangles = sliceTriangles;
     exports.getSlices = getSlices;
+    exports.getVolume = getVolume;
     exports.calcData = calcData;
 
 })(typeof exports === 'undefined'? this['slicing']={}: exports);

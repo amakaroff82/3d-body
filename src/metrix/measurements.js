@@ -1,5 +1,13 @@
 (function(exports){
 
+    function getShoulderLength(){
+        return shoulderData.shoulderLength;
+    }
+
+    function getAkromionWide(){
+        return shoulderData.akromionWide
+    }
+
     function getUnderbustGirst(){
         return chestData.underbustGirst;
     }
@@ -216,7 +224,9 @@
         {
             Name: "SHOULDER LENGTH",
             Ru: "длинна плеча",
-            Complexity: "****"
+            Complexity: "****",
+            code: getShoulderLength,
+            showSlices: true
         },
         {
             Name: "BACK WIDTH",
@@ -259,7 +269,9 @@
         {
             Name: "AKROMION WIDE",
             Ru: "ширина по между ключицами (спина)",
-            Complexity: ""
+            Complexity: "",
+            code: getAkromionWide,
+            showSlices: true
         },
         {
             Name: "UPPER FRONT WIDE",
@@ -383,6 +395,7 @@
         hipGirthAndHeight.getHipGirthAndHeight(sharedConfig);
         chestData.getChestData(sharedConfig);
         verticalBodySlice.getVerticalBodySlice(sharedConfig);
+        shoulderData.getShoulderData(sharedConfig);
 
         for(var c in config){
             var conf = config[c];
