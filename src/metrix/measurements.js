@@ -1,5 +1,29 @@
 (function(exports){
 
+    function getArmLength(){
+        return armsData.armLength;
+    }
+
+    function getUpperArmLength(){
+        return armsData.upperArmLength;
+    }
+
+    function getWristGirth(){
+        return armsData.wristGirth;
+    }
+
+    function getElbowGirth(){
+        return armsData.elbowGirth;
+    }
+
+    function getMiddleForearmGirth(){
+        return armsData.middleForearmGirth;
+    }
+
+    function getUpperArmGirth(){
+        return armsData.upperArmGirth;
+    }
+
     function getShoulderLength(){
         return shoulderData.shoulderLength;
     }
@@ -328,32 +352,44 @@
         {
             Name: "ARM LENGTH",
             Ru: "длинна руки",
-            Complexity: "****"
+            Complexity: "****",
+            code: getArmLength,
+            showSlices: true
         },
         {
             Name: "UPPER ARM LENGTH",
             Ru: "длинна верхней части руки",
-            Complexity: "**"
+            Complexity: "**",
+            code: getUpperArmLength,
+            showSlices: true
         },
         {
             Name: "UPPER ARM GIRTH",
             Ru: "обхват верхней части руки",
-            Complexity: ""
+            Complexity: "",
+            code: getUpperArmGirth,
+            showSlices: true
         },
         {
             Name: "ELBOW GIRTH",
             Ru: "обхват локтя",
-            Complexity: ""
+            Complexity: "",
+            code: getElbowGirth,
+            showSlices: true
         },
         {
             Name: "FOREARM GIRTH",
             Ru: "обхват предплечья",
-            Complexity: ""
+            Complexity: "",
+            code: getMiddleForearmGirth,
+            showSlices: true
         },
         {
             Name: "WRIST GIRTH",
             Ru: "обхват запястья",
-            Complexity: ""
+            Complexity: "",
+            code: getWristGirth,
+            showSlices: true
         },
         {
             Name: "ARM LENGTH FROM THE SEV. CERV. VERT.",
@@ -396,6 +432,8 @@
         chestData.getChestData(sharedConfig);
         verticalBodySlice.getVerticalBodySlice(sharedConfig);
         shoulderData.getShoulderData(sharedConfig);
+        armsData.getArmsData(sharedConfig);
+
 
         for(var c in config){
             var conf = config[c];

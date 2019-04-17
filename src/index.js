@@ -12,6 +12,7 @@ global.chestData = require("./metrix/shared/chest");
 global.verticalBodySlice = require("./metrix/shared/verticalBodySlice");
 global.shoulderData = require("./metrix/shared/shoulderData");
 global.armsData = require("./metrix/shared/armsData");
+
 global.measurements = require("./metrix/measurements.js");
 global.helpers = require("./scanner/helpers.js");
 global.slicing = require("./scanner/slicing.js");

@@ -115,7 +115,7 @@
         exports.crotchLengthFrontLength = crotchLengthFrontLength;
         exports.totalCrotchLength = totalCrotchLength;
 
-        exports.heightToCrotch = verticalBodySlice.minY;
+        exports.heightToCrotch = verticalBodySlice.sliceInfo.minY;
         exports.backSideLength = backSideLength;
         exports.trunckLength = heightToNeck - minSliceY;
     }

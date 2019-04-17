@@ -61,6 +61,10 @@
         var leftSide = parts[0];
         var rightSide = parts[1];
 
+        slicing.calcData(rightSide);
+        exports.rightRangeBustUnderRightHand = rightSide.sliceInfo.minX;
+
+
         if(true/* context.showSlices*/) {
             showSlice(leftSide, false, "orange");
             showSlice(rightSide, false, "orange");

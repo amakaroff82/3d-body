@@ -24,7 +24,7 @@
 
 
         // left shoulder
-        var angleZ = Math.PI / 4;
+        var angleZ = Math.PI / 6;
 
         // translate Y
         var matrixTrans = new THREE.Matrix4();
@@ -42,7 +42,7 @@
 
 
         // right shoulder
-        var angleZ = -(Math.PI / 4);
+        var angleZ = -(Math.PI / 6);
 
         // translate Y
         var matrixTrans = new THREE.Matrix4();
