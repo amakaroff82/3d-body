@@ -138,8 +138,36 @@
         renderer.setSize( window.innerWidth, window.innerHeight );
     }
 
+    function clearThree(obj){
+        while(obj.children.length > 0){
+            clearThree(obj.children[0])
+            obj.remove(obj.children[0]);
+        }
+        if(obj.geometry) obj.geometry.dispose()
+        if(obj.material) obj.material.dispose()
+        if(obj.texture) obj.texture.dispose()
+    }
+
+
+    var ind = document.location.hash.split("#")[1];
+    console.log('hash changed: ' + ind);
+
+    var modelStorage = models.models[ ind || 0 ];
 
     load(modelStorage);
+
+    window.addEventListener('hashchange', function() {
+
+        location.reload(true);
+
+/*        var ind = document.location.hash.split("#")[1];
+        console.log('hash changed: ' + ind);
+        var modelStorage = models.models[ ind ];
+
+        clearThree(scene);
+        load(modelStorage);
+*/
+    }, true);
 
 
 })(typeof exports === 'undefined'? this['index']={}: exports);

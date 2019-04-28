@@ -1,7 +1,6 @@
 (function(exports){
 
-
-    function getMaxSlice(slices){
+    function getMaxZSlice(slices){
         var maxZ = -Infinity;
         var maxZSlice = null;
 
@@ -20,89 +19,92 @@
         return maxZSlice;
     }
 
-
-    function getChestData(context){
+    function getBust(){
         var countOfSlices = 20;
-
         var angleY = 0.0;
-
         var bodyFinish = neckGirthAndCervicalHeightData.neckBaseCenter;
         var bodyStart = hipGirthAndHeight.heightToHip;
-
         var range = bodyFinish - bodyStart;
-
         var sliceShift = 0.02;
 
         var chestRange = bodyStart + (range * (2/3));
-        var waistRange = bodyStart + (range * (1/3));
-
-
         var chestTopEnd = chestRange - (sliceShift * 2);
         var chestBottomStart = chestRange + sliceShift;
         var chestDepth = chestTopEnd - chestBottomStart;
 
-
-        // translate Y
         var matrixTrans = new THREE.Matrix4();
-        matrixTrans.makeTranslation(0, -chestBottomStart, 0);
-
-        // rotate Y
         var matrixRot = new THREE.Matrix4();
-        matrixRot.makeRotationY(angleY);
 
+        matrixTrans.makeTranslation(0, -chestBottomStart, 0);
+        matrixRot.makeRotationY(angleY);
         matrixTrans = matrixRot.multiply(matrixTrans);
 
         // slicing
-        var resultSlices = slicing.getSlices(matrixTrans, countOfSlices, chestDepth, context.showSlices);
-
-        var bustSlice = getMaxSlice(resultSlices);
-
+        var resultSlices = slicing.getSlices(matrixTrans, countOfSlices, chestDepth, false);
+        var bustSlice = getMaxZSlice(resultSlices);
         var parts = helpers.splitBodyParts(bustSlice);
-        var leftSide = parts[0];
-        var rightSide = parts[1];
+        var leftBustSide = parts[0];
+        var rightBustSide = parts[1];
 
-        slicing.calcData(rightSide);
-        exports.rightRangeBustUnderRightHand = rightSide.sliceInfo.minX;
-
+        slicing.calcData(rightBustSide);
+        exports.rightRangeBustUnderRightHand = rightBustSide.sliceInfo.minX;
 
         if(true/* context.showSlices*/) {
-            showSlice(leftSide, false, "orange");
-            showSlice(rightSide, false, "orange");
+            showSlice(leftBustSide, false, "orange");
+            showSlice(rightBustSide, false, "orange");
         }
 
+        var chestGirth = leftBustSide.sliceInfo.len + rightBustSide.sliceInfo.len;
+        var chestHeight = leftBustSide.sliceInfo.minY;
 
-        // bust width
+        showSlice(leftBustSide, false, "#66bbbb");
+        showSlice(rightBustSide, false, "#bbbb66");
+
+        return {
+            left: leftBustSide,
+            right: rightBustSide,
+            chestGirth: chestGirth,
+            chestHeight: chestHeight
+        }
+    };
+
+    function getNipples(leftBustSide, rightBustSide){
+
         var center = new THREE.Vector3(0, 0, 1);
 
-        leftSide.faces = leftSide.faces.filter(function(f){
-            return f.main.a.z > (leftSide.sliceInfo.maxZ / 2) && helpers.dot(f.normal, center) > 0.8;
+        leftBustSide.faces = leftBustSide.faces.filter(function(f){
+            return f.main.a.z > (leftBustSide.sliceInfo.maxZ / 2) && helpers.dot(f.normal, center) > 0.8;
         });
 
-        leftSide.faces.sort(function(f1, f2){
+        leftBustSide.faces.sort(function(f1, f2){
             return f2.a.x - f1.a.x;
         });
 
-        var leftS = leftSide.faces[0];
+        var leftS = leftBustSide.faces[0];
 
-
-        rightSide.faces = rightSide.faces.filter(function(f){
-            return f.main.a.z > (rightSide.sliceInfo.maxZ / 2) && helpers.dot(f.normal, center) > 0.8;
+        rightBustSide.faces = rightBustSide.faces.filter(function(f){
+            return f.main.a.z > (rightBustSide.sliceInfo.maxZ / 2) && helpers.dot(f.normal, center) > 0.8;
         });
 
-        rightSide.faces.sort(function(f1, f2){
+        rightBustSide.faces.sort(function(f1, f2){
             return f1.a.x - f2.a.x;
         });
 
-        var rightS = rightSide.faces[0];
-
+        var rightS = rightBustSide.faces[0];
 
         var bustWidth = leftS.a.x - rightS.a.x;
 
-        showSlice(leftSide, false, "black");
-        showSlice(rightSide, false, "black");
+        showSlice(leftBustSide, false, "black");
+        showSlice(rightBustSide, false, "black");
 
+        return {
+            bustWidth: bustWidth,
+            rightS: rightS,
+            leftS: leftS
+        };
+    }
 
-        //
+    function getFrontWaistLine(rightS, chestHeight){
 
         var nr = neckGirthAndCervicalHeightData.neckRightPoint;
 
@@ -112,29 +114,21 @@
             z: rightS.main.a.z - nr.main.a.z
         });
 
-        // translate Y
-        matrixTrans = new THREE.Matrix4();
-        //matrixTrans.makeTranslation(nr.main.a.x, nr.main.a.y, nr.main.a.z);
-        matrixTrans.makeTranslation(-nr.main.a.x, nr.main.a.y, nr.main.a.z);
-
-        // rotate X
-        var matrixRotX = new THREE.Matrix4();
-        matrixRotX.makeRotationX(Math.PI / 2);
-
-
-        // rotate Y
         var angleY = Math.atan2(direction.z, direction.x) - Math.PI;
-        var matrixRotY = new THREE.Matrix4();
-        matrixRotY.makeRotationY(angleY);
 
+        var matrixTrans = new THREE.Matrix4();
+        var matrixRotX = new THREE.Matrix4();
+        var matrixRotY = new THREE.Matrix4();
+
+        matrixTrans.makeTranslation(-nr.main.a.x, nr.main.a.y, nr.main.a.z);
+        matrixRotX.makeRotationX(Math.PI / 2);
+        matrixRotY.makeRotationY(angleY);
 
         matrixRotX = matrixRotX.multiply(matrixRotY);
         var matrixRes2 = matrixRotX.multiply(matrixTrans);
 
         // slicing
-        var resultSlices = slicing.getSlices(matrixRes2, 1, 0, context.showSlices, true);
-
-        var frontWaistLineSlice = resultSlices[0][0];
+        var frontWaistLineSlice = slicing.getSlices(matrixRes2, 1, 0, false, true)[0][0];
 
         //bustSlice
         var underBustWaistLineFaces = [];
@@ -142,14 +136,14 @@
         var neckShoulderPointToBustLength = 0;
 
         frontWaistLineSlice.faces.forEach(function(f){
-            if( f.main.a.y > bustSlice.sliceInfo.maxY &&
+            if( f.main.a.y > chestHeight &&
                 f.main.a.z > nr.main.a.z){
                 frontWaistLineFaces.push(f);
                 neckShoulderPointToBustLength += f.len;
             }
 
-            if( f.main.a.y < bustSlice.sliceInfo.maxY &&
-                f.main.a.y > bustSlice.sliceInfo.maxY * 0.95 &&
+            if( f.main.a.y < chestHeight &&
+                f.main.a.y > chestHeight * 0.95 &&
                 f.main.a.z > nr.main.a.z){
                 underBustWaistLineFaces.push(f);
             }
@@ -158,7 +152,6 @@
         underBustWaistLineFaces.sort(function(f1, f2){
             return f2.main.a.z - f1.main.a.z;
         });
-
 
         var fromTopToDown = new THREE.Vector3(0,-1,0);
         helpers.buildNormals(underBustWaistLineFaces);
@@ -173,7 +166,7 @@
             }
         }
 
-        var middleUnderburst = bustSlice.sliceInfo.maxY - ((bustSlice.sliceInfo.maxY - (bustSlice.sliceInfo.maxY * 0.95)) / 2);
+        var middleUnderburst = chestHeight - ((chestHeight - (chestHeight * 0.95)) / 2);
 
         underBustWaistLineFaces.sort(function(f1, f2){
             return f2.main.a.y - f1.main.a.y;
@@ -192,90 +185,92 @@
             }
         }
 
-        var underBustGirthHeight = minZFace.main.a.y; // = underBustWaistLineFaces[underBustWaistLineFaces.length / 2];
-
-
-        // translate Y
-        var matrixTrans = new THREE.Matrix4();
-        matrixTrans.makeTranslation(0, -underBustGirthHeight, 0);
-
-        // slicing
-        var underbustSlice = slicing.getSlices(matrixTrans, 1, 0, context.showSlices);
-        underbustSlice = underbustSlice[0][0];
-
-        var parts = helpers.splitBodyParts(underbustSlice);
-
-        var leftSide = parts[0];
-        var rightSide = parts[1];
-
-
         if(true || context.showSlices){
             showSlice(frontWaistLineFaces, false, "#bb6600");
             showSlice(underBustWaistLineFaces, false, "#00bb66");
-            showSlice(leftSide, false, "#66bbbb");
-            showSlice(rightSide, false, "#bbbb66");
         }
 
-        var chestGirth = leftSide.sliceInfo.len + rightSide.sliceInfo.len;
-        var bustHeight = Math.max(leftSide.sliceInfo.maxY, rightSide.sliceInfo.maxY);
-        var waistHeight = (bustHeight - hipGirthAndHeight.heightToHip) / 2 + hipGirthAndHeight.heightToHip;
-        var middleHipHeight = (bustHeight - hipGirthAndHeight.heightToHip) / 4 + hipGirthAndHeight.heightToHip;
+        var underBustGirthHeight = minZFace.main.a.y; // = underBustWaistLineFaces[underBustWaistLineFaces.length / 2];
 
-        var maxWaistHeight = (waistHeight - middleHipHeight) / 3 + middleHipHeight;
+        return {
+            underBustGirthHeight: underBustGirthHeight,
+            neckShoulderPointToBustLength: neckShoulderPointToBustLength
+        }
+    }
 
+    function getUnderbust(frontWaistLine){
+        // translate Y
+        var matrixTrans = new THREE.Matrix4();
+        matrixTrans.makeTranslation(0, -frontWaistLine.underBustGirthHeight, 0);
+
+        // UNDERBUST
+        var underbustSlice = slicing.getSlices(matrixTrans, 1, 0, false, true)[0][0];
+        var underbustGirst = underbustSlice.sliceInfo.len;
+
+        showSlice(underbustSlice, false, "blue");
+
+        return {
+            underbustGirst: underbustGirst
+        }
+    }
+
+    function getFrontWaist(bust, frontWaistLine, waistHeight){
 
         // waist girth
 
-
-        matrixTrans = new THREE.Matrix4();
+        var matrixTrans = new THREE.Matrix4();
         matrixTrans.makeTranslation(0, -waistHeight, 0);
 
-        resultSlices = slicing.getSlices(matrixTrans, 1, 0, context.showSlices, true);
-        var waistSlice = resultSlices[0][0];
+        var waistSlice = slicing.getSlices(matrixTrans, 1, 0, false, true)[0][0];
+
         if(true || context.showSlices){
-            showSlice(waistSlice, false, "blue")
+            showSlice(waistSlice, false, "blue");
         }
 
         var waistGirth = waistSlice.sliceInfo.len;
-        var frontWaistLineLength = neckShoulderPointToBustLength + (bustSlice.sliceInfo.maxY - waistSlice.sliceInfo.maxY);
+        var frontWaistLineLength = frontWaistLine.neckShoulderPointToBustLength + (bust.chestHeight - waistSlice.sliceInfo.maxY);
 
+        return {
+            waistGirth: waistGirth,
+            frontWaistLineLength: frontWaistLineLength
+        }
+    }
 
-        // maxWaistGirth
+    function getMaxWaist(maxWaistHeight){
 
-        matrixTrans = new THREE.Matrix4();
+        var matrixTrans = new THREE.Matrix4();
         matrixTrans.makeTranslation(0, -maxWaistHeight, 0);
 
-        resultSlices = slicing.getSlices(matrixTrans, 1, 0, context.showSlices, true);
-        var maxWaistSlice = resultSlices[0][0];
+        var maxWaistSlice = slicing.getSlices(matrixTrans, 1, 0, false, true)[0][0];
         if(true || context.showSlices){
             showSlice(maxWaistSlice, false, "orange")
         }
 
         var maxWaistGirth = maxWaistSlice.sliceInfo.len;
 
+        return {
+            maxWaistGirth: maxWaistGirth
+        }
+    }
 
-
-
-
-        // middle hip
-
-
-        matrixTrans = new THREE.Matrix4();
+    function getMiddleHip(middleHipHeight){
+        var matrixTrans = new THREE.Matrix4();
         matrixTrans.makeTranslation(0, -middleHipHeight, 0);
 
-        resultSlices = slicing.getSlices(matrixTrans, 1, 0, context.showSlices, true);
-        var middleHipSlice = resultSlices[0][0];
+        var middleHipSlice = slicing.getSlices(matrixTrans, 1, 0, false, true)[0][0];
         if(true || context.showSlices){
             showSlice(middleHipSlice, false, "blue")
         }
 
         var middleHipGirth = middleHipSlice.sliceInfo.len;
 
+        return {
+            middleHipGirth: middleHipGirth,
+            middleHipSlice: middleHipSlice
+        }
+    }
 
-
-        ////// outside leg length
-
-
+    function getLeg(middleHipSlice, waistHeight){
         var maxSlices = middleHipSlice.faces.sort(function(f1, f2){
             return f2.a.x - f1.a.x;
         });
@@ -284,17 +279,16 @@
         var maxXFace = maxSlices[0];
         var depthOfSlice =  maxXFace.a.z;
 
-        matrixTrans = new THREE.Matrix4();
-        matrixTrans.makeTranslation(0, -depthOfSlice, 0);
-
-        // rotate Y
+        var matrixTrans = new THREE.Matrix4();
         var matrixRot = new THREE.Matrix4();
+
+        matrixTrans.makeTranslation(0, -depthOfSlice, 0);
         matrixRot.makeRotationX(angleX);
 
         matrixTrans = matrixRot.multiply(matrixTrans);
 
-        resultSlices = slicing.getSlices(matrixTrans, 1, 0, context.showSlices, true);
-        var leftLegSlice = resultSlices[0][0];
+        var leftLegSlice = slicing.getSlices(matrixTrans, 1, 0, false, true)[0][0];
+
         leftLegSlice.faces = leftLegSlice.faces.filter(function(face){
             var f = face.main;
             return (f.a.x > 0) && (f.a.x < maxXFace.a.x * 1.1) && f.a.y > hipGirthAndHeight.heightToHip && f.a.y < waistHeight;
@@ -309,18 +303,54 @@
         var waistToHip = leftLegSlice.sliceInfo.len;
         var outsideLegLength = waistToHip + hipGirthAndHeight.heightToHip;
 
-        exports.underbustGirst = underbustSlice.sliceInfo.len;
-        exports.frontWaistLineLength = frontWaistLineLength;
-        exports.neckShoulderPointToBustLength = neckShoulderPointToBustLength;
-        exports.waistHeight = waistHeight;
-        exports.waistGirth = waistGirth;
-        exports.waistToHip = waistToHip
-        exports.chestGirth = chestGirth;
+        return {
+            outsideLegLength: outsideLegLength,
+            waistToHip: waistToHip
+        }
+    }
+
+    function getChestData(){
+
+        var bust = getBust();
+
+        var nipples = getNipples(bust.left, bust.right);
+
+        var frontWaistLine = getFrontWaistLine(nipples.rightS, bust.chestHeight);
+
+        var bustHeight = bust.chestHeight;
+        var waistHeight = (bustHeight - hipGirthAndHeight.heightToHip) / 2 + hipGirthAndHeight.heightToHip;
+        var middleHipHeight = (bustHeight - hipGirthAndHeight.heightToHip) / 4 + hipGirthAndHeight.heightToHip;
+        var maxWaistHeight = (waistHeight - middleHipHeight) / 3 + middleHipHeight;
+
+        var underbust = getUnderbust(frontWaistLine);
+
+        var frontWaist = getFrontWaist(bust, frontWaistLine, waistHeight);
+
+        var maxWaist = getMaxWaist(maxWaistHeight);
+
+        var middleHip = getMiddleHip(middleHipHeight);
+
+        var leg = getLeg(middleHip.middleHipSlice, waistHeight);
+
         exports.bustHeight = bustHeight;
-        exports.middleHipGirth = middleHipGirth;
-        exports.outsideLegLength = outsideLegLength;
-        exports.maxWaistGirth = maxWaistGirth;
-        exports.bustPointDist = bustWidth;
+
+        exports.underbustGirst = underbust.underbustGirst;
+
+        exports.frontWaistLineLength = frontWaist.frontWaistLineLength;
+        exports.waistGirth = frontWaist.waistGirth;
+
+        exports.neckShoulderPointToBustLength = frontWaistLine.neckShoulderPointToBustLength;
+
+        exports.waistHeight = waistHeight;
+
+        exports.chestGirth = bust.chestGirth;
+        exports.middleHipGirth = middleHip.middleHipGirth;
+        exports.maxWaistGirth = maxWaist.maxWaistGirth;
+
+        exports.bustPointDist = nipples.bustWidth;
+
+        exports.outsideLegLength = leg.outsideLegLength;
+        exports.waistToHip = leg.waistToHip;
     }
 
     exports.getChestData = getChestData;

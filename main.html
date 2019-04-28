@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        iframe {
+            position: fixed;
+            top: 30px;
+            width: 100%;
+            height: calc(100% - 30px);
+        }
+        body {
+            margin: 0;
+        }
+        #menu {
+            margin-left: 6px;
+            margin-top: 2px;
+            font-family: sans-serif;
+        }
+    </style>
+</head>
+<body>
+<div id="menu">
+    Model:
+    <select id="model">
+    </select>
+</div>
+<iframe id="frame" src="index.html"></iframe>
+</body>
+<script>
+    var model = document.getElementById("model");
+    var iframe = document.getElementById("frame");
+
+    for(var i = 0; i < 16; i ++){
+        var opt = document.createElement("option");
+        opt.value = i;
+        opt.text = i;
+        model.appendChild(opt);
+    }
+
+    model.addEventListener("change", function(evt){
+        console.log(evt.target.value);
+
+        iframe.setAttribute("src", "index.html#" + evt.target.value);
+//        evt.target.value
+    })
+</script>
+</html>
