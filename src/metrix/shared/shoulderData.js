@@ -61,6 +61,8 @@
         showSlice(rightShoulderFaces, false, "purple");
 
         getShoulderLength(rightShoulderFaces);
+        getShoulderFromBackNeckLength(rightShoulderFaces);
+
         getAkromionWide(leftShoulderFaces, rightShoulderFaces);
 
         exports.rightShoulderPoint = rightShoulderFaces[0].main.a;
@@ -118,6 +120,55 @@
 
         showSlice(shoulderFaces, false, "green");
         exports.shoulderLength = shoulderLength;
+    }
+
+    function getShoulderFromBackNeckLength(rightShoulderFaces){
+        var nr = neckGirthAndCervicalHeightData.neckBackPoint;
+        var sp = rightShoulderFaces[0];
+
+        var direction = {
+            x: nr.main.a.x - sp.main.a.x,
+            y: nr.main.a.y - sp.main.a.y,
+            z: nr.main.a.z - sp.main.a.z
+        };
+
+        var angleY = Math.atan2(direction.z, direction.x) - Math.PI;
+
+        // translate Y
+        var matrixTrans = new THREE.Matrix4();
+        var matrixRotX = new THREE.Matrix4();
+        var matrixRotY = new THREE.Matrix4();
+
+        matrixTrans.makeTranslation(nr.main.a.x, nr.main.a.y, -nr.main.a.z);
+        matrixRotX.makeRotationX(Math.PI / 2);
+        matrixRotY.makeRotationY(angleY);
+
+        matrixRotX = matrixRotX.multiply(matrixRotY);
+        var matrixRes2 = matrixRotX.multiply(matrixTrans);
+
+        var resultSlices = slicing.getSlices(matrixRes2, 1, 0, false, true);
+
+        var shoulderSlices = resultSlices[0][0];
+
+        var shoulderFaces = [];
+
+        var shoulderLength = 0;
+        for(var ss in shoulderSlices.faces){
+            var s = shoulderSlices.faces[ss];
+
+            if(
+                s.main.a.x < /*nr.main.a.x*/ 0 &&
+                s.main.a.x > sp.main.a.x &&
+                s.main.a.y < (nr.main.a.y * 1.04) &&
+                s.main.a.y > sp.main.a.y
+            ){
+                shoulderFaces.push(s);
+                shoulderLength += s.len;
+            }
+        }
+
+        showSlice(shoulderFaces, false, "darkgreen", 1);
+        exports.shoulderFromBackNeckLength = shoulderLength;
     }
 
     function getAkromionWide(leftShoulderFaces, rightShoulderFaces){

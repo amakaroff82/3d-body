@@ -185,7 +185,10 @@
                 calcData(chains[i]);
 
                 if(show){
-                    showSlice(chains[i], false, "#00aa00");
+                    if(typeof (show) === "string")
+                        showSlice(chains[i], false, show);
+                    else
+                        showSlice(chains[i], false, "#00aa00");
                 }
             }
 

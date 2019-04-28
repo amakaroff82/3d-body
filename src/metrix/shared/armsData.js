@@ -284,12 +284,21 @@
         };
 
         var upperArmSlice = getUpperArmSlice(rp, heightToCrotch, bodyParts);
-        var upperArmSlice = getLowerArmSlice(upperArmSlice, bodyParts);
+        var lowerArmSlice = getLowerArmSlice(upperArmSlice, bodyParts);
 
         showSlice(bodyParts.wrist, false, "red");
         showSlice(bodyParts.elbow, false, "blue");
         showSlice(bodyParts.middleForearm, false, "darkred");
         showSlice(bodyParts.upperArm, false, "darkblue");
+
+
+        console.log(">>> shoulderFromBackNeckLength: " + shoulderData.shoulderFromBackNeckLength);
+
+
+        exports.armLengthFromSev =
+            shoulderData.shoulderFromBackNeckLength +
+            upperArmSlice.sliceInfo.len +
+            lowerArmSlice.sliceInfo.len;
 
         exports.upperArmGirth = bodyParts.upperArm.sliceInfo.len;
         exports.middleForearmGirth = bodyParts.middleForearm.sliceInfo.len;

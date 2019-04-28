@@ -152,21 +152,12 @@
     var ind = document.location.hash.split("#")[1];
     console.log('hash changed: ' + ind);
 
-    var modelStorage = models.models[ ind || 0 ];
+    window.modelStorage = models.models[ ind || 0 ];
 
     load(modelStorage);
 
     window.addEventListener('hashchange', function() {
-
         location.reload(true);
-
-/*        var ind = document.location.hash.split("#")[1];
-        console.log('hash changed: ' + ind);
-        var modelStorage = models.models[ ind ];
-
-        clearThree(scene);
-        load(modelStorage);
-*/
     }, true);
 
 

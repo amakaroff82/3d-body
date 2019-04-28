@@ -1,9 +1,6 @@
 var isTranslate = false;
 var paramStorage = null;
-var modelStorage = models.models[ 0 ];
-
-
-
+window.modelStorage = models.models[ 0 ];
 
 
 function basis(group, origin){
@@ -41,14 +38,17 @@ function basis(group, origin){
 }
 
 
-function showSlice(slice, showComputed, color) {
+function showSlice(slice, showComputed, color, step) {
     var faces = slice.faces || slice;
-    for (var j = 1; j < faces.length; j=j+2) {
+    step = step || 1;
+
+    var geometry = new THREE.SphereGeometry( 0.001, 4, 4);
+    var material = new THREE.MeshBasicMaterial( {color: color || 0x0000d0, side: THREE.DoubleSide} );
+
+    for (var j = 1; j < faces.length; j=j+step) {
 
         var f = showComputed ? faces[j] : faces[j].main;
 
-        var geometry = new THREE.SphereGeometry( 0.001, 4, 4);
-        var material = new THREE.MeshBasicMaterial( {color: color || 0x0000d0, side: THREE.DoubleSide} );
         var sphere = new THREE.Mesh( geometry, material );
 
         sphere.position.x = f.a.x;
@@ -147,6 +147,17 @@ function renderRecord(param, container, header){
     pred.className = "pred";
 
     var res = parseFloat(prepareResult(param.result));
+
+
+/*    //var a = "BACK WIDTH";
+    var a = "AXLE LENGTH";
+    //var a = "UPPER FRONT WIDE";
+    //var a = "ARM LENGTH FROM THE SEV. CERV. VERT.";
+
+    if(param.Name != a){
+        return
+    }*/
+
     var orig = parseFloat(prepareOrig(param.Name));
 
     var a = Math.max(res, orig);
@@ -193,6 +204,6 @@ function prepareOrig(name){
 
 function prepareResult(res){
 
-    return (res * modelStorage.height).toFixed(1)
+    return (res * window.modelStorage.height).toFixed(1)
 
 }

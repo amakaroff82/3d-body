@@ -51,11 +51,21 @@
                     showSlice(slice, false, "blue");
                 }
 
-
                 var neckRightPoint = slice.faces.sort(function(f1, f2){
-                    return f1.a.x - f2.a.x;
+                    return f1.main.a.x - f2.main.a.x;
                 })[0];
 
+                var neckBackPoints = slice.faces.filter(function(f){
+                    return f.main.a.z < slice.sliceInfo.centerZ;
+                });
+
+                var neckBackPoint = neckBackPoints.sort(function(f1, f2){
+                    return Math.abs(f1.a.x) - Math.abs(f2.a.x);
+                })[0];
+
+                //basis(group, neckBackPoint.main.a);
+
+                exports.neckBackPoint = neckBackPoint;
                 exports.neckRightPoint = neckRightPoint;
                 exports.neckGirth = minSlice.sliceInfo.len;
                 exports.neckBaseDiameter = slice.sliceInfo.maxX - slice.sliceInfo.minX;
@@ -73,9 +83,20 @@
         }
 
         var neckRightPoint = minSlice.faces.sort(function(f1, f2){
-            return f2.a.x - f1.a.x;
+            return f2.main.a.x - f1.main.a.x;
         });
 
+        var neckBackPoints = slice.faces.filter(function(f){
+            return f.main.a.z < slice.sliceInfo.centerZ;
+        });
+
+        var neckBackPoint = neckBackPoints.sort(function(f1, f2){
+            return Math.abs(f1.a.x) - Math.abs(f2.a.x);
+        })[0];
+
+        //basis(group, neckBackPoint.main.a);
+
+        exports.neckBackPoint = neckBackPoint;
         exports.neckGirth = minSlice.sliceInfo.len;
         exports.neckRightPoint = neckRightPoint[0];
         exports.neckBaseDiameter = minSlice.sliceInfo.maxX - minSlice.sliceInfo.minX;

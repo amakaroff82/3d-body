@@ -94,7 +94,7 @@
                 totalCrotchLength += face.len;
             }
 
-            if(fc.a.y < heightToNeck && fc.a.y > chestData.waistGirth && fc.a.z <= hipGirthAndHeight.hipCenterZ){
+            if(fc.a.y < heightToNeck && fc.a.y > chestData.waistHeight && fc.a.z <= hipGirthAndHeight.hipCenterZ){
                 backWaistLengthFaces.push(face);
                 backWaistLength += face.len;
             }

@@ -43,22 +43,24 @@
         var resultSlices = slicing.getSlices(matrixTrans, countOfSlices, chestDepth, false);
         var bustSlice = getMaxZSlice(resultSlices);
         var parts = helpers.splitBodyParts(bustSlice);
-        var leftBustSide = parts[0];
-        var rightBustSide = parts[1];
+        var leftBustSide = parts.left;
+        var rightBustSide = parts.right;
+        var chestLen = parts.len;
 
+        slicing.calcData(leftBustSide);
         slicing.calcData(rightBustSide);
         exports.rightRangeBustUnderRightHand = rightBustSide.sliceInfo.minX;
 
-        if(true/* context.showSlices*/) {
+        if(false/* context.showSlices*/) {
             showSlice(leftBustSide, false, "orange");
             showSlice(rightBustSide, false, "orange");
         }
 
-        var chestGirth = leftBustSide.sliceInfo.len + rightBustSide.sliceInfo.len;
+        var chestGirth = chestLen; //leftBustSide.sliceInfo.len + rightBustSide.sliceInfo.len;
         var chestHeight = leftBustSide.sliceInfo.minY;
 
-        showSlice(leftBustSide, false, "#66bbbb");
-        showSlice(rightBustSide, false, "#bbbb66");
+/*        showSlice(leftBustSide, false, "#66bbbb");
+        showSlice(rightBustSide, false, "#bbbb66");*/
 
         return {
             left: leftBustSide,

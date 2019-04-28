@@ -1,5 +1,9 @@
 (function(exports){
 
+    function getArmLengthFromSev(){
+        return armsData.armLengthFromSev;
+    }
+
     function getArmLength(){
         return armsData.armLength;
     }
@@ -394,7 +398,9 @@
         {
             Name: "ARM LENGTH FROM THE SEV. CERV. VERT.",
             Ru: "длинна руки от центра шеи сзади",
-            Complexity: ""
+            Complexity: "",
+            code: getArmLengthFromSev,
+            showSlices: true
         }
     ];
 
