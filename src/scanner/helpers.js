@@ -481,7 +481,7 @@
 
                 result = forward;
                 showSlice(forward, false, "blue", 1);
-                console.log(">>>>>>> len forward : " + forwardLen * window.modelStorage.height);
+                //console.log(">>>>>>> len forward : " + forwardLen * window.modelStorage.height);
 
 
 
@@ -493,11 +493,11 @@
                 result = result.concat(back);
 
                 showSlice(back, false, "black", 1);
-                console.log(">>>>>>> len back : " + backLen * window.modelStorage.height);
+                //console.log(">>>>>>> len back : " + backLen * window.modelStorage.height);
 
 
 
-                console.log(">>>>>>> +dist : " + dist * window.modelStorage.height);
+                //console.log(">>>>>>> +dist : " + dist * window.modelStorage.height);
                 len += dist;
 
                 sideCalc = result;
