@@ -85,7 +85,7 @@
 
             var width = Math.max(sl.sliceInfo.maxZ - sl.sliceInfo.minZ, sl.sliceInfo.maxX - sl.sliceInfo.minX);
 
-            if(!lastWidth || (lastWidth * 1.01) > width){
+            if(!lastWidth || (lastWidth * 1.03) > width){
                 lastWidth = width;
                 lastSliceInd = i;
             }

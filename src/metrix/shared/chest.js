@@ -19,6 +19,67 @@
         return maxZSlice;
     }
 
+    function getFrontWidth(bustSlice, leftBustSide, rightBustSide){
+        var shifting = 0.01;
+
+        var leftP =  leftBustSide.faces.sort(function(f1, f2){
+            return f2.main.a.x - f1.main.a.x;
+        })[0];
+
+        var rightP =  rightBustSide.faces.sort(function(f1, f2){
+            return f1.main.a.x - f2.main.a.x;
+        })[0];
+
+        //basis(group, leftP.main.a);
+        //basis(group, rightP.main.a);
+
+        var frontWidth = {
+            faces: bustSlice.faces.filter(function (f) {
+                return  leftP.main.a.x + shifting > f.main.a.x &&
+                        f.main.a.x > rightP.main.a.x - shifting &&
+                        f.main.a.z > 0
+            })
+        };
+
+        showSlice(frontWidth, false, "red");
+
+        slicing.calcData(frontWidth);
+
+        exports.frontWidthLen = frontWidth.sliceInfo.len
+    }
+
+    function getBackWidth(bustSlice, leftBustSide, rightBustSide){
+
+
+        var leftP =  leftBustSide.faces.sort(function(f1, f2){
+            return f2.main.a.x - f1.main.a.x;
+        })[0];
+
+        var rightP =  rightBustSide.faces.sort(function(f1, f2){
+            return f1.main.a.x - f2.main.a.x;
+        })[0];
+
+        //basis(group, leftP.main.a);
+        //basis(group, rightP.main.a);
+
+        var rp = shoulderData.rightShoulderPoint;
+        var shifting = (rightP.main.a.x - rp.x) / 2;
+
+        var frontWidth = {
+            faces: bustSlice.faces.filter(function (f) {
+                return  leftP.main.a.x + shifting > f.main.a.x &&
+                        f.main.a.x > rightP.main.a.x - shifting &&
+                        f.main.a.z < 0
+            })
+        };
+
+        showSlice(frontWidth, false, "blue");
+
+        slicing.calcData(frontWidth);
+
+        exports.backWidthLen = frontWidth.sliceInfo.len
+    }
+
     function getBust(){
         var countOfSlices = 20;
         var angleY = 0.0;
@@ -49,18 +110,14 @@
 
         slicing.calcData(leftBustSide);
         slicing.calcData(rightBustSide);
+
+        getFrontWidth(resultSlices[0][0], leftBustSide, rightBustSide);
+        getBackWidth(resultSlices[0][0], leftBustSide, rightBustSide);
+
         exports.rightRangeBustUnderRightHand = rightBustSide.sliceInfo.minX;
 
-        if(false/* context.showSlices*/) {
-            showSlice(leftBustSide, false, "orange");
-            showSlice(rightBustSide, false, "orange");
-        }
-
-        var chestGirth = chestLen; //leftBustSide.sliceInfo.len + rightBustSide.sliceInfo.len;
+        var chestGirth = chestLen;
         var chestHeight = leftBustSide.sliceInfo.minY;
-
-/*        showSlice(leftBustSide, false, "#66bbbb");
-        showSlice(rightBustSide, false, "#bbbb66");*/
 
         return {
             left: leftBustSide,
@@ -96,8 +153,8 @@
 
         var bustWidth = leftS.a.x - rightS.a.x;
 
-        showSlice(leftBustSide, false, "black");
-        showSlice(rightBustSide, false, "black");
+        //showSlice(leftBustSide, false, "black");
+        //showSlice(rightBustSide, false, "black");
 
         return {
             bustWidth: bustWidth,
@@ -209,7 +266,7 @@
         var underbustSlice = slicing.getSlices(matrixTrans, 1, 0, false, true)[0][0];
         var underbustGirst = underbustSlice.sliceInfo.len;
 
-        showSlice(underbustSlice, false, "blue");
+        showSlice(underbustSlice, false, "pink");
 
         return {
             underbustGirst: underbustGirst

@@ -146,24 +146,25 @@
         matrixRotX = matrixRotX.multiply(matrixRotY);
         var matrixRes2 = matrixRotX.multiply(matrixTrans);
 
-        var resultSlices = slicing.getSlices(matrixRes2, 1, 0, false, true);
-
-        var shoulderSlices = resultSlices[0][0];
+        var shoulderSlices = slicing.getSlices(matrixRes2, 1, 0, false, true)[0];
 
         var shoulderFaces = [];
-
         var shoulderLength = 0;
-        for(var ss in shoulderSlices.faces){
-            var s = shoulderSlices.faces[ss];
 
-            if(
-                s.main.a.x < /*nr.main.a.x*/ 0 &&
-                s.main.a.x > sp.main.a.x &&
-                s.main.a.y < (nr.main.a.y * 1.04) &&
-                s.main.a.y > sp.main.a.y
-            ){
-                shoulderFaces.push(s);
-                shoulderLength += s.len;
+        for(var sl in shoulderSlices) {
+            var slice = shoulderSlices[sl];
+            for (var ss in slice.faces) {
+                var s = slice.faces[ss];
+
+                if (
+                    s.main.a.x < /*nr.main.a.x*/ 0 &&
+                    s.main.a.x > sp.main.a.x &&
+                    s.main.a.y < (nr.main.a.y * 1.02) &&
+                    s.main.a.y > sp.main.a.y
+                ) {
+                    shoulderFaces.push(s);
+                    shoulderLength += s.len;
+                }
             }
         }
 

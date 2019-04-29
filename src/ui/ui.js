@@ -49,6 +49,7 @@ function showSlice(slice, showComputed, color, step) {
 
         var f = showComputed ? faces[j] : faces[j].main;
 
+
         var sphere = new THREE.Mesh( geometry, material );
 
         sphere.position.x = f.a.x;
@@ -56,6 +57,25 @@ function showSlice(slice, showComputed, color, step) {
         sphere.position.z = f.a.z;
 
         group.add( sphere );
+
+        var sphere = new THREE.Mesh( geometry, material );
+
+        sphere.position.x = f.b.x;
+        sphere.position.y = f.b.y;
+        sphere.position.z = f.b.z;
+
+        group.add( sphere );
+
+        var sphere = new THREE.Mesh( geometry, material );
+
+        sphere.position.x = f.c.x;
+        sphere.position.y = f.c.y;
+        sphere.position.z = f.c.z;
+
+        group.add( sphere );
+
+
+
 
         if(faces[j].normal){
             var n = faces[j].normal;
@@ -149,9 +169,9 @@ function renderRecord(param, container, header){
     var res = parseFloat(prepareResult(param.result));
 
 
-/*    //var a = "BACK WIDTH";
-    var a = "AXLE LENGTH";
-    //var a = "UPPER FRONT WIDE";
+   /* //var a = "BACK WIDTH";
+    //var a = "AXLE LENGTH";
+    var a = "UPPER FRONT WIDE";
     //var a = "ARM LENGTH FROM THE SEV. CERV. VERT.";
 
     if(param.Name != a){

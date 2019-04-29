@@ -1,5 +1,17 @@
 (function(exports){
 
+    function getAxleLength(){
+        return 0.128;
+    }
+
+    function getBackWidthLen(){
+        return chestData.backWidthLen;
+    }
+
+    function getFrontWidthLen(){
+        return chestData.frontWidthLen;
+    }
+
     function getArmLengthFromSev(){
         return armsData.armLengthFromSev;
     }
@@ -259,7 +271,9 @@
         {
             Name: "BACK WIDTH",
             Ru: "ширина спины",
-            Complexity: "**"
+            Complexity: "**",
+            code:  getBackWidthLen,
+            showSlices: true
         },
         {
             Name: "BACK WAIST LENGTH",
@@ -292,7 +306,9 @@
         {
             Name: "AXLE LENGTH",
             Ru: "дистанция от шеи под лопатки сзади",
-            Complexity: ""
+            Complexity: "",
+            code: getAxleLength,
+            showSlices: true
         },
         {
             Name: "AKROMION WIDE",
@@ -304,7 +320,9 @@
         {
             Name: "UPPER FRONT WIDE",
             Ru: "ширина до подмышек над грудью",
-            Complexity: ""
+            Complexity: "",
+            code: getFrontWidthLen,
+            showSlices: true
         },
         {
             Name: "WAIST GIRTH",
@@ -435,9 +453,9 @@
         // shared
         neckGirthAndCervicalHeightData.getNeckGirthAndCervicalHeightData(sharedConfig);
         hipGirthAndHeight.getHipGirthAndHeight(sharedConfig);
+        shoulderData.getShoulderData(sharedConfig);
         chestData.getChestData(sharedConfig);
         verticalBodySlice.getVerticalBodySlice(sharedConfig);
-        shoulderData.getShoulderData(sharedConfig);
         armsData.getArmsData(sharedConfig);
 
 
@@ -446,7 +464,7 @@
             if(conf.code) {
                 var key = "Calculation: " + conf.Name.toLowerCase();
 
-                console.log(key);
+                //console.log(key);
                 conf.result = conf.code({
                     showSlices: sharedConfig.showSlices,
                     getConfigResults: getConfigResults

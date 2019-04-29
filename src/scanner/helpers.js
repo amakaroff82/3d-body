@@ -393,15 +393,13 @@
 
     function computeSide(slice, isR){
         var len = 0;
-        // computing left side
+
         var side = slice.faces.filter(function(face){
             if(isR)
-                return 0 >= Math.min(face.main.a.x,face.main.b.x,face.main.c.x);
+                return 0 >= face.main.a.x;
             else
-                return 0 < Math.min(face.main.a.x,face.main.b.x,face.main.c.x);
+                return 0 < face.main.a.x;
         });
-
-        // detecting hand
 
         // detecting hand by normal orientation
         var hand = side.filter(function(face){
@@ -411,77 +409,54 @@
                 z: face.main.a.z
             };
             var res = dot(face.normal, norm(pt));
-            //console.log("L: " + res);
 
             return res < 0;
         });
 
-        // sorting
-        hand.sort(function(f1, f2){
-            if(isR)
-                return f2.main.a.x - f1.main.a.x;
-            else
-                return f1.main.a.x - f2.main.a.x;
-        });
-
-        showSlice(hand, false, isR ? "#ff5555" : "#5555ff");
+        //showSlice(hand, false, isR ? "#ff5555" : "#ff5555");
 
         var sideCalc = {
             faces: []
         };
 
         if(hand.length) {
-            var maxVal = hand[0].main.a.x * 1.1;
-
-            var sideBody = side.filter(function (face) {
-
-                var pt = {
-                    x: face.main.a.x,
-                    y: 0,
-                    z: face.main.a.z
-                };
-
-                if(isR)
-                    return face.main.a.x >= maxVal;
-                else
-                    return face.main.a.x < maxVal;
+            hand.sort(function(f1, f2){
+                return f2.main.a.z - f1.main.a.z;
             });
 
-            var forward = [];
-            var back = [];
+            //basis(group, hand[0].main.a);
 
-            sideBody.forEach(function (face) {
-                if (face.main.a.z > 0) {
-                    forward.push(face)
-                } else {
-                    back.push(face)
-                }
+            var maxZ = hand[0].main.a.z + 0.005;
+
+            hand.sort(function(f1, f2){
+                return isR ? f2.main.a.x - f1.main.a.x : f1.main.a.x - f2.main.a.x;
             });
 
-            sideCalc.faces = sideBody;
+            var maxX = hand[0].main.a.x;
 
-            slicing.calcData(sideCalc);
+            console.log("maxX : " + maxX);
 
-            var fPoint = forward.sort(function (f1, f2) {
+            // forward
+
+            var forwardTest = side.filter(function (face) {
+                return face.main.a.z > maxZ /*&& (isR ? face.main.a.x > maxX * 1.2 : face.main.a.x < maxX * 1.2 )*/;
+            });
+
+            var fPoint = forwardTest.sort(function (f1, f2) {
                 return f1.main.a.z - f2.main.a.z
             });
 
+            var forward = forwardTest;
 
-            back = back.filter(function(face){
-                var pt = {
-                    x: 0,
-                    y: 0,
-                    z: 1
-                };
+            /// back
 
-                var res = dot(face.normal, pt);
-
-                return res < -0.3;
+            var back = side.filter(function(face){
+                return (isR ? (face.main.a.x > maxX * 0.95) : (face.main.a.x < maxX * 0.95)) &&
+                    face.main.a.z < -0.02;
             });
 
-
             var bPoint = back.sort(function (f1, f2) {
-                return f2.main.a.z - f1.main.a.z
+                return isR ? f1.main.a.x - f2.main.a.x : f2.main.a.x - f1.main.a.x;
             });
 
             if(fPoint.length && bPoint.length) {
@@ -491,31 +466,41 @@
 
                 var dist = fPoint[0].main.a.distanceTo(bPoint[0].main.a);
 
-
                 var backLen = 0;
                 var forwardLen = 0;
 
-                forward.forEach(function(f){
+                var result = [];
+                len = 0;
+
+
+
+                forward.forEach(function (f) {
                     forwardLen += f.len;
                 });
+                len += forwardLen;
 
-                back.forEach(function(f){
+                result = forward;
+                showSlice(forward, false, "blue", 1);
+                console.log(">>>>>>> len forward : " + forwardLen * window.modelStorage.height);
+
+
+
+                back.forEach(function (f) {
                     backLen += f.len;
                 });
+                len += backLen;
 
-                len = forwardLen + backLen;
-
-                //console.log(">>>>>>> len old : " + sideCalc.sliceInfo.len * window.modelStorage.height);
-                console.log(">>>>>>> len back : " + backLen * window.modelStorage.height);
-                console.log(">>>>>>> len forward : " + forwardLen * window.modelStorage.height);
-                console.log(">>>>>>> +dist : " + dist * window.modelStorage.height);
-
-                len += dist;
+                result = result.concat(back);
 
                 showSlice(back, false, "black", 1);
-                showSlice(forward, false, "blue", 1);
+                console.log(">>>>>>> len back : " + backLen * window.modelStorage.height);
 
-                sideCalc = forward.concat(back);
+
+
+                console.log(">>>>>>> +dist : " + dist * window.modelStorage.height);
+                len += dist;
+
+                sideCalc = result;
             }else{
                 len = sideCalc.sliceInfo.len;
             }
@@ -610,7 +595,7 @@
     function splitBodyParts(slice){
         buildNormals(slice.faces);
 
-        var left = computeSide(slice);
+        var left = computeSide(slice, false);
         var right = computeSide(slice, true);
 
         return {
@@ -622,7 +607,7 @@
                 faces: right.side,
                 sliceInfo: {}
             },
-            len: right.len + left.len
+            len: left.len + right.len
         }
     }
 

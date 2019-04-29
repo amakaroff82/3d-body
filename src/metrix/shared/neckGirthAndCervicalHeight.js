@@ -2,7 +2,7 @@
 
     function getNeckGirthAndCervicalHeightData(context){
 
-        var detectionLevel = 1.2;
+        var detectionLevel = 1.19;
         var countOfSlices = 20;
 
         var angleX = -0.39;
@@ -60,10 +60,8 @@
                 });
 
                 var neckBackPoint = neckBackPoints.sort(function(f1, f2){
-                    return Math.abs(f1.a.x) - Math.abs(f2.a.x);
+                    return Math.abs(f1.main.a.x) - Math.abs(f2.main.a.x);
                 })[0];
-
-                //basis(group, neckBackPoint.main.a);
 
                 exports.neckBackPoint = neckBackPoint;
                 exports.neckRightPoint = neckRightPoint;
@@ -91,7 +89,7 @@
         });
 
         var neckBackPoint = neckBackPoints.sort(function(f1, f2){
-            return Math.abs(f1.a.x) - Math.abs(f2.a.x);
+            return Math.abs(f1.main.a.x) - Math.abs(f2.main.a.x);
         })[0];
 
         //basis(group, neckBackPoint.main.a);
