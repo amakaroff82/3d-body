@@ -137,7 +137,7 @@
                             var faces = slices[j];
                             faces.push(f_t);
 
-                            break;
+                            //break;
                         }
                     }
 
